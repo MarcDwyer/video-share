@@ -1,0 +1,58 @@
+.homepage {
+  background-color: transparent;
+  color: inherit;
+  display: flex;
+  height: 100%;
+  width: 100%;
+
+  .create {
+    margin: auto;
+    display: flex;
+    position: relative;
+    border-radius: 10px;
+    padding: 35px 35px;
+
+    form {
+      display: flex;
+      flex-direction: column;
+      margin: auto;
+      width: 95%;
+      .fields {
+        display: flex;
+        flex-direction: column;
+        width: 95%;
+
+        .error-msg {
+          margin: auto auto 4.5px 0;
+        }
+
+        input {
+          margin: auto auto 0 auto;
+          width: 100%;
+          outline: none;
+          border: none;
+          color: inherit;
+          padding: 8.5px 8.5px;
+          font-size: 24px;
+          border-radius: 5px;
+        }
+      }
+
+      .buttons {
+        display: flex;
+        margin: 0 auto auto 0;
+        margin-top: 5px;
+
+        button {
+          background-color: #0080ff;
+          padding: 15px 15px;
+          color: #eee;
+          border: none;
+          cursor: pointer;
+          border-radius: 5px;
+          width: 75px;
+        }
+      }
+    }
+  }
+}
