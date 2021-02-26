@@ -9,10 +9,9 @@
     margin: auto;
     display: flex;
     position: relative;
-    border-radius: 10px;
-    padding: 35px 35px;
 
     form {
+      padding: 35px 35px;
       display: flex;
       flex-direction: column;
       margin: auto;
@@ -33,6 +32,7 @@
           border: none;
           color: inherit;
           padding: 8.5px 8.5px;
+          background-color: inherit;
           font-size: 24px;
           border-radius: 5px;
         }
@@ -45,7 +45,7 @@
 
         button {
           background-color: #0080ff;
-          padding: 15px 15px;
+          padding: 8.5px 8.5px;
           color: #eee;
           border: none;
           cursor: pointer;

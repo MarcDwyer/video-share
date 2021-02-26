@@ -4,17 +4,20 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import { ThemeStruct } from "../../stores/theme_store";
 import * as yup from "yup";
 
+import { VideoStore } from "../../stores/video_store";
+
 import "./homepage.scss";
 
 type Props = {
   theme: ThemeStruct;
+  videoStore: VideoStore;
 };
 
 const schema = yup.object().shape({
   url: yup.string().required().url(),
 });
 
-export const Homepage = observer(({ theme }: Props) => {
+export const Homepage = observer(({ theme, videoStore }: Props) => {
   return (
     <div className="homepage">
       <div
@@ -28,14 +31,13 @@ export const Homepage = observer(({ theme }: Props) => {
           validationSchema={schema}
           onSubmit={async (values) => {
             try {
-              const f = await fetch("/video", {
+              const f = await fetch("/video/create", {
                 method: "POST",
                 body: JSON.stringify({
                   url: values.url,
                 }),
               });
-              const resp = await f.json();
-              console.log(resp);
+              videoStore.state = await f.json();
             } catch (e) {
               console.error(e);
             }
@@ -46,7 +48,7 @@ export const Homepage = observer(({ theme }: Props) => {
               <ErrorMessage className="error-msg" name="url" component="span" />
               <Field
                 autoComplete="off"
-                style={{ backgroundColor: theme.bgColor }}
+                style={{ border: `1px solid ${theme.borderColor}` }}
                 name="url"
                 type="text"
                 placeholder="Enter your video's url"

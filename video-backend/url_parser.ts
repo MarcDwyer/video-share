@@ -8,8 +8,8 @@
  * @returns should provide a valid iframe embed link
  */
 
-type VideoLink = [source: string, id: string];
-class UrlHandler {
+export type VideoLink = [source: string, id: string];
+export class URLHandler {
   constructor(private url: string) {}
 
   handleMsg(): VideoLink | null {

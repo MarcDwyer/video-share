@@ -5,9 +5,8 @@ module.exports = {
   plugins: ["@snowpack/plugin-react-refresh", "@snowpack/plugin-sass"],
   routes: [
     {
-      src: "/video",
+      src: "/video/create",
       dest: (req, res) => {
-        console.log("proxying..");
         // remove /api prefix (optional)
         // req.url = req.url.replace(/^\/video/, "");
         proxy.web(req, res, { target: "http://localhost:1337" });
