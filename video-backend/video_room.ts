@@ -9,7 +9,7 @@ export class VideoRoom {
   get state() {
     return {
       source: this.source,
-      id: this.id,
+      roomId: this.id,
     };
   }
   broadcast(payload: any) {

@@ -12,5 +12,6 @@ module.exports = {
         proxy.web(req, res, { target: "http://localhost:1337" });
       },
     },
+    { match: "routes", src: ".*", dest: "/index.html" },
   ],
 };

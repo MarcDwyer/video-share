@@ -3,6 +3,7 @@ import React from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { ThemeStruct } from "../../stores/theme_store";
 import * as yup from "yup";
+import { useHistory } from "react-router-dom";
 
 import { VideoStore } from "../../stores/video_store";
 
@@ -10,14 +11,15 @@ import "./homepage.scss";
 
 type Props = {
   theme: ThemeStruct;
-  videoStore: VideoStore;
 };
 
 const schema = yup.object().shape({
   url: yup.string().required().url(),
 });
 
-export const Homepage = observer(({ theme, videoStore }: Props) => {
+export const Homepage = observer(({ theme }: Props) => {
+  const history = useHistory();
+
   return (
     <div className="homepage">
       <div
@@ -37,7 +39,8 @@ export const Homepage = observer(({ theme, videoStore }: Props) => {
                   url: values.url,
                 }),
               });
-              videoStore.state = await f.json();
+              const { roomId } = await f.json();
+              history.push(`/room/${roomId}`);
             } catch (e) {
               console.error(e);
             }
