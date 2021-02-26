@@ -7,11 +7,10 @@ module.exports = {
     {
       src: "/video",
       dest: (req, res) => {
-        console.log(req);
+        console.log("proxying..");
         // remove /api prefix (optional)
-        req.url = req.url.replace(/^\/video/, "");
-
-        proxy.web(req, res);
+        // req.url = req.url.replace(/^\/video/, "");
+        proxy.web(req, res, { target: "http://localhost:1337" });
       },
     },
   ],

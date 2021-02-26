@@ -30,10 +30,12 @@ export const Homepage = observer(({ theme }: Props) => {
             try {
               const f = await fetch("/video", {
                 method: "POST",
-                body: values.url,
+                body: JSON.stringify({
+                  url: values.url,
+                }),
               });
               const resp = await f.json();
-              console.log("gamer", resp);
+              console.log(resp);
             } catch (e) {
               console.error(e);
             }
