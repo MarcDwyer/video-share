@@ -3,8 +3,10 @@ import { observer } from "mobx-react-lite";
 import { VideoStore } from "../../stores/video_store";
 import { useParams } from "react-router-dom";
 import { IS_DEV } from "../..";
+import { Payload } from "../../type_defs/backend_defs";
+import { PayloadTypes, RequestTypes } from "../../type_defs/request_types";
 
-import { RequestTypes } from "../../type_defs/request_types";
+import "./room.scss";
 
 type Props = {
   videoStore: VideoStore;
@@ -15,10 +17,20 @@ type Params = {
 export const Room = observer(({ videoStore }: Props) => {
   const { roomId } = useParams<Params>();
 
-  const handleMsg = (msg: MessageEvent<any>) => {
-    const data = JSON.parse(msg.data);
-    console.log(data);
-  };
+  const handleMsg = useCallback(
+    (msg: MessageEvent<string>) => {
+      const data = JSON.parse(msg.data) as Payload;
+      console.log(data);
+
+      if ("type" in data) {
+        switch (data.type) {
+          case PayloadTypes.SetState:
+            videoStore.state = data.payload;
+        }
+      }
+    },
+    [videoStore]
+  );
 
   useEffect(() => {
     if (!videoStore.ws) {
@@ -29,7 +41,6 @@ export const Room = observer(({ videoStore }: Props) => {
       const ws = new WebSocket(url);
       ws.onmessage = (msg) => handleMsg(msg);
       ws.onopen = () => {
-        console.log("open");
         videoStore.ws = ws;
       };
     } else if (videoStore.ws && !videoStore.state) {
@@ -39,5 +50,5 @@ export const Room = observer(({ videoStore }: Props) => {
     }
   }, [videoStore.ws]);
 
-  return <span>{roomId}</span>;
+  return <div className="room"></div>;
 });
