@@ -25,7 +25,10 @@ export const App = observer(({ themeStore, videoStore }: Props) => {
           path="/room/:roomId"
           render={(p) => <Room {...p} videoStore={videoStore} />}
         />
-        <Route component={() => <Homepage theme={theme} />} path="/" />
+        <Route
+          component={() => <Homepage videoStore={videoStore} theme={theme} />}
+          path="/"
+        />
       </Switch>
     </div>
   );

@@ -9,7 +9,7 @@ export class Hub {
 
   createRoom(source: VideoLink) {
     const id = v4.generate();
-    const room = new VideoRoom(id, source);
+    const room = new VideoRoom({ id, source }, this);
     this.rooms.set(id, room);
     return room;
   }

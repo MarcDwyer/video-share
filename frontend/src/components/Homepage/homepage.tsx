@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { ThemeStruct } from "../../stores/theme_store";
 import * as yup from "yup";
@@ -8,18 +8,19 @@ import { useHistory } from "react-router-dom";
 import { VideoStore } from "../../stores/video_store";
 
 import "./homepage.scss";
+import { RequestTypes } from "../../type_defs/request_types";
 
 type Props = {
   theme: ThemeStruct;
+  videoStore: VideoStore;
 };
 
 const schema = yup.object().shape({
   url: yup.string().required().url(),
 });
 
-export const Homepage = observer(({ theme }: Props) => {
+export const Homepage = observer(({ theme, videoStore }: Props) => {
   const history = useHistory();
-
   return (
     <div className="homepage">
       <div

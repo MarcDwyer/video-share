@@ -8,4 +8,11 @@ export class VideoStore {
   constructor() {
     makeAutoObservable(this);
   }
+
+  reset() {
+    if (this.ws) {
+      this.ws.close();
+      this.ws = null;
+    }
+  }
 }

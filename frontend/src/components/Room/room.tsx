@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { observer } from "mobx-react-lite";
 import { VideoStore } from "../../stores/video_store";
 import { useParams } from "react-router-dom";
@@ -17,6 +17,8 @@ type Params = {
 export const Room = observer(({ videoStore }: Props) => {
   const { roomId } = useParams<Params>();
 
+  const roomRef = useRef<string>(roomId);
+
   const handleMsg = useCallback(
     (msg: MessageEvent<string>) => {
       const data = JSON.parse(msg.data) as Payload;
@@ -31,24 +33,48 @@ export const Room = observer(({ videoStore }: Props) => {
     },
     [videoStore]
   );
+  useEffect(() => {
+    if (roomRef.current !== roomId) {
+      console.log("changing rooms...");
+      const payload = {
+        to: roomId,
+        from: roomRef,
+      };
+      videoStore.ws.send(
+        JSON.stringify({ type: RequestTypes.ChangeRoom, payload })
+      );
+      roomRef.current = roomId;
+    }
+  }, [roomId]);
 
   useEffect(() => {
-    if (!videoStore.ws) {
-      const url =
-        IS_DEV === "development"
-          ? `ws://localhost:1338`
-          : `ws://${document.location.hostname}`;
-      const ws = new WebSocket(url);
-      ws.onmessage = (msg) => handleMsg(msg);
-      ws.onopen = () => {
-        videoStore.ws = ws;
-      };
-    } else if (videoStore.ws && !videoStore.state) {
-      videoStore.ws.send(
-        JSON.stringify({ type: RequestTypes.GetState, roomId })
-      );
+    return function () {
+      if (videoStore.state && videoStore.ws) {
+        videoStore.ws.send(
+          JSON.stringify({
+            type: RequestTypes.RemoveRoom,
+            from: videoStore.state.roomId,
+          })
+        );
+        videoStore.reset();
+      }
+    };
+  }, []);
+  useEffect(() => {
+    if (videoStore.ws) {
+      videoStore.reset();
     }
-  }, [videoStore.ws]);
+    const url =
+      IS_DEV === "development"
+        ? `ws://localhost:1338`
+        : `ws://${document.location.hostname}`;
+    const ws = new WebSocket(url);
+    ws.onmessage = (msg) => handleMsg(msg);
+    ws.onopen = () => {
+      videoStore.ws = ws;
+      ws.send(JSON.stringify({ type: RequestTypes.GetState, roomId }));
+    };
+  }, []);
 
   return <div className="room"></div>;
 });

@@ -1,0 +1,9 @@
+27.02.2021
+    Added Payload type to broadcast().
+    Added some state properties and probably need to add a chat[] prop.
+    Need to work on UI.   
+
+28.02.2021
+    Video Room should check for inactivity and self delete
+    Room component should reset connection when roomId is changed in param url
+    Room component should clean up room state when unmounting
