@@ -7,14 +7,17 @@ import { Payload } from "../../type_defs/backend_defs";
 import { PayloadTypes, RequestTypes } from "../../type_defs/request_types";
 
 import "./room.scss";
+import { RoomNav } from "../Room_Navbar/room_nav";
+import { ThemeStore } from "../../stores/theme_store";
 
 type Props = {
   videoStore: VideoStore;
+  themeStore: ThemeStore;
 };
 type Params = {
   roomId: string;
 };
-export const Room = observer(({ videoStore }: Props) => {
+export const Room = observer(({ videoStore, themeStore }: Props) => {
   const { roomId } = useParams<Params>();
 
   const roomRef = useRef<string>(roomId);
@@ -76,5 +79,9 @@ export const Room = observer(({ videoStore }: Props) => {
     };
   }, []);
 
-  return <div className="room"></div>;
+  return (
+    <div className="room">
+      <RoomNav themeStore={themeStore} videoStore={videoStore} />
+    </div>
+  );
 });

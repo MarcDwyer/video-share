@@ -74,7 +74,6 @@ export class VideoRoom {
   selectedNewMod() {
     if (!this.conns.size) {
       console.log("No users connected");
-      this.hasMod = false;
       return;
     }
     const conn = getRandomItem(this.conns);
