@@ -1,4 +1,3 @@
-import { VideoLink } from "./url_parser.ts";
 import { PayloadTypes } from "./type_defs/request_types.ts";
 import { WebSocket } from "https://deno.land/x/websocket@v0.0.6/mod.ts";
 import { Hub } from "./hub.ts";
@@ -16,9 +15,10 @@ export type ConnInfo = {
 };
 
 export type State = {
-  source: VideoLink;
+  source: string;
   roomId: string;
   connInfo: ConnInfo[];
+  start: number;
 };
 export type Payload = {
   type: string;
@@ -26,14 +26,15 @@ export type Payload = {
 };
 export type Config = {
   id: string;
-  source: VideoLink;
+  source: string;
 };
 export class VideoRoom {
   conns: Conns = new Map();
   hasMod: boolean = false;
 
   id: string;
-  source: VideoLink;
+  source: string;
+  start: number = 0;
 
   constructor({ id, source }: Config, private hub: Hub) {
     this.id = id;
@@ -45,6 +46,7 @@ export class VideoRoom {
       source: this.source,
       roomId: this.id,
       connInfo: this.connUsers,
+      start: this.start,
     };
     return {
       type: PayloadTypes.SetState,
@@ -91,7 +93,11 @@ export class VideoRoom {
         this.selectedNewMod();
       }
     }
-    this.broadcast(this.state);
+    if (!this.conns.size) {
+      this._terminate();
+    } else {
+      this.broadcast(this.state);
+    }
   }
   addConn(ws: MyWebSocket) {
     ws.roomId = this.id;

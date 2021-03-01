@@ -6,9 +6,11 @@ import { IS_DEV } from "../..";
 import { Payload } from "../../type_defs/backend_defs";
 import { PayloadTypes, RequestTypes } from "../../type_defs/request_types";
 
-import "./room.scss";
 import { RoomNav } from "../Room_Navbar/room_nav";
 import { ThemeStore } from "../../stores/theme_store";
+
+import "./room.scss";
+import { VideoPlayer } from "../VideoPlayer/videoplayer";
 
 type Props = {
   videoStore: VideoStore;
@@ -26,11 +28,12 @@ export const Room = observer(({ videoStore, themeStore }: Props) => {
     (msg: MessageEvent<string>) => {
       const data = JSON.parse(msg.data) as Payload;
       console.log(data);
-
       if ("type" in data) {
         switch (data.type) {
           case PayloadTypes.SetState:
             videoStore.state = data.payload;
+          case PayloadTypes.Error:
+            videoStore.error = data.payload.msg || "Server error";
         }
       }
     },
@@ -81,7 +84,12 @@ export const Room = observer(({ videoStore, themeStore }: Props) => {
 
   return (
     <div className="room">
-      <RoomNav themeStore={themeStore} videoStore={videoStore} />
+      {videoStore.state && (
+        <>
+          <RoomNav themeStore={themeStore} videoStore={videoStore} />
+          <VideoPlayer state={videoStore.state} />
+        </>
+      )}
     </div>
   );
 });

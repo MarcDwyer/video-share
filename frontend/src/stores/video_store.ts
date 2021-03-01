@@ -5,6 +5,8 @@ export class VideoStore {
   state: State | null = null;
   ws: WebSocket | null = null;
 
+  error: string | null = null;
+  start = 60;
   constructor() {
     makeAutoObservable(this);
   }
@@ -14,5 +16,9 @@ export class VideoStore {
       this.ws.close();
       this.ws = null;
     }
+  }
+
+  changeStart(start: number) {
+    this.state.start = start;
   }
 }

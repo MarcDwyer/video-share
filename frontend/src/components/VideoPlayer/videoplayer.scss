@@ -1,0 +1,11 @@
+.video-player {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+
+  iframe {
+    width: 854px;
+    height: 480px;
+    border: none;
+  }
+}

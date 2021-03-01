@@ -6,4 +6,5 @@ export enum RequestTypes {
 
 export enum PayloadTypes {
   SetState = "Setstate",
+  Error = "error",
 }

@@ -7,3 +7,4 @@
     Video Room should check for inactivity and self delete
     Room component should reset connection when roomId is changed in param url
     Room component should clean up room state when unmounting
+    Need to add info "mod" or "viewer" into the Websocket

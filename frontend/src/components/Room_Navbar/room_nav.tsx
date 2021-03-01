@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite";
 import { VideoStore } from "../../stores/video_store";
 import "./room_nav.scss";
 import { ThemeStore } from "../../stores/theme_store";
+
 type Props = {
   videoStore: VideoStore;
   themeStore: ThemeStore;

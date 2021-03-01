@@ -4,9 +4,10 @@ export type ConnInfo = {
   username?: string | number;
 };
 export type State = {
-  source: VideoLink;
+  source: string;
   roomId: string;
   connInfo: ConnInfo[];
+  start: number;
 };
 
 export type Payload = {

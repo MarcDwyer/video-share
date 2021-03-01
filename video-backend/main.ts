@@ -1,7 +1,7 @@
 import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 import { URLHandler } from "./url_parser.ts";
 import { Hub } from "./hub.ts";
-import { RequestTypes } from "./type_defs/request_types.ts";
+import { PayloadTypes, RequestTypes } from "./type_defs/request_types.ts";
 import { WebSocketServer } from "https://deno.land/x/websocket@v0.0.6/mod.ts";
 import { MyWebSocket } from "./video_room.ts";
 import { VideoRoom } from "./video_room.ts";
@@ -21,13 +21,13 @@ router.post("/video/create", async (ctx: any) => {
   const bytes = await Deno.readAll(bodyR.value);
   const result = decoder.decode(bytes);
   const { url } = JSON.parse(result) as URLBody;
-  const links = new URLHandler(url).handleMsg();
+  const source = new URLHandler(url).handleMsg();
 
-  if (!links) {
+  if (!source) {
     ctx.response.body = "No source could be found";
     return;
   } else {
-    const room = hub.createRoom(links);
+    const room = hub.createRoom(source);
     console.log(`Created: ${room.id}`);
     ctx.response.body = { roomId: room.id };
   }
@@ -45,6 +45,15 @@ wss.on("connection", (ws: MyWebSocket) => {
           room = hub.rooms.get(req.roomId);
           if (room) {
             room.addConn(ws);
+          } else {
+            ws.send(
+              JSON.stringify({
+                type: PayloadTypes.Error,
+                payload: {
+                  msg: "Room could not be found. Try creating another",
+                },
+              })
+            );
           }
           break;
         case RequestTypes.ChangeRoom:

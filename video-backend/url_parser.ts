@@ -7,12 +7,12 @@
  * @param url source of the video
  * @returns should provide a valid iframe embed link
  */
-
+// src="https://www.youtube.com/embed/bDErK6iOG3Q"
 export type VideoLink = [source: string, id: string];
 export class URLHandler {
   constructor(private url: string) {}
 
-  handleMsg(): VideoLink | null {
+  handleMsg(): string | null {
     const url = new URL(this.url);
     switch (url.hostname) {
       case "youtu.be":
@@ -20,15 +20,14 @@ export class URLHandler {
         return this.youtube(url);
       case "vimeo.com":
       case "www.vimeo.com":
-        return this.vimeo(url);
+        return this.url;
       default:
         console.log(url);
         return null;
     }
   }
-  private youtube(url: URL): VideoLink {
+  private youtube(url: URL): string {
     let finalId: string;
-    let source = "youtube";
     if (url.search.length) {
       const [, id] = url.search.split("=");
       finalId = id;
@@ -36,10 +35,10 @@ export class URLHandler {
       const [, id] = url.pathname.split("/");
       finalId = id;
     }
-    return [source, finalId];
+    return finalId;
   }
-  private vimeo(url: URL): VideoLink {
-    const [, id] = url.pathname.split("/");
-    return ["vimeo", id];
-  }
+  // private vimeo(url: URL): string {
+  //   const [, id] = url.pathname.split("/");
+  //   return url;
+  // }
 }
