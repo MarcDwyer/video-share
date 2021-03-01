@@ -106,8 +106,20 @@ export class VideoRoom {
       status = "mod";
       this.hasMod = true;
     }
-    this.conns.set(ws, { status });
+    const connInfo: ConnInfo = { status };
+    this.conns.set(ws, connInfo);
     this.broadcast(this.state);
+    this.sendInfo(ws, connInfo);
+  }
+  sendInfo(ws: WebSocket, info?: ConnInfo) {
+    const connInfo = info || this.conns.get(ws);
+    if (connInfo) {
+      const payload: Payload = {
+        type: PayloadTypes.ConnInfo,
+        payload: connInfo,
+      };
+      ws.send(JSON.stringify(payload));
+    }
   }
   updateUsername(ws: MyWebSocket, username: string) {
     const conn = this.conns.get(ws);

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { observer } from "mobx-react-lite";
 import { VideoStore } from "../../stores/video_store";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { IS_DEV } from "../..";
 import { Payload } from "../../type_defs/backend_defs";
 import { PayloadTypes, RequestTypes } from "../../type_defs/request_types";
@@ -9,8 +9,8 @@ import { PayloadTypes, RequestTypes } from "../../type_defs/request_types";
 import { RoomNav } from "../Room_Navbar/room_nav";
 import { ThemeStore } from "../../stores/theme_store";
 
-import "./room.scss";
 import { VideoPlayer } from "../VideoPlayer/videoplayer";
+import "./room.scss";
 
 type Props = {
   videoStore: VideoStore;
@@ -21,19 +21,23 @@ type Params = {
 };
 export const Room = observer(({ videoStore, themeStore }: Props) => {
   const { roomId } = useParams<Params>();
-
+  const { theme } = themeStore;
   const roomRef = useRef<string>(roomId);
 
   const handleMsg = useCallback(
     (msg: MessageEvent<string>) => {
       const data = JSON.parse(msg.data) as Payload;
-      console.log(data);
       if ("type" in data) {
         switch (data.type) {
           case PayloadTypes.SetState:
             videoStore.state = data.payload;
+            if (videoStore.error) videoStore.error = null;
+            break;
           case PayloadTypes.Error:
             videoStore.error = data.payload.msg || "Server error";
+            break;
+          case PayloadTypes.ConnInfo:
+            videoStore.connInfo = data.payload;
         }
       }
     },
@@ -84,7 +88,19 @@ export const Room = observer(({ videoStore, themeStore }: Props) => {
 
   return (
     <div className="room">
-      {videoStore.state && (
+      {videoStore.error && (
+        <div className="error">
+          <span>{videoStore.error}.</span>
+          <Link
+            style={{ backgroundColor: theme.blueBtn }}
+            className="homepage-btn"
+            to="/"
+          >
+            Homepage
+          </Link>
+        </div>
+      )}
+      {videoStore.state && !videoStore.error && (
         <>
           <RoomNav themeStore={themeStore} videoStore={videoStore} />
           <VideoPlayer state={videoStore.state} />

@@ -4,3 +4,16 @@
   height: 100%;
   background-color: transparent;
 }
+.error {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+
+  .homepage-btn {
+    color: inherit;
+    text-decoration: none;
+    padding: 15px 15px;
+    width: 75px;
+    border-radius: 5px;
+  }
+}

@@ -10,6 +10,7 @@ export const Dark: ThemeStruct = {
   btnColor: "#23262b",
   hoverShade: "#2f333c",
   hamburgercolor: "#F7850A",
+  blueBtn: "#0080ff",
 };
 export type ThemeStruct = {
   bgColor: string;
@@ -21,6 +22,7 @@ export type ThemeStruct = {
   btnColor: string;
   hoverShade: string;
   hamburgercolor: string;
+  blueBtn: string;
 };
 export class ThemeStore {
   theme = Dark;

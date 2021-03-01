@@ -66,6 +66,7 @@ wss.on("connection", (ws: MyWebSocket) => {
           if (toRoom) {
             toRoom.addConn(ws);
           }
+          break;
         case RequestTypes.RemoveRoom:
           if (!ws.roomId) return;
           room = hub.rooms.get(ws.roomId || req.payload.from);

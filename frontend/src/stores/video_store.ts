@@ -1,12 +1,14 @@
 import { makeAutoObservable } from "mobx";
-import { State } from "../type_defs/backend_defs";
+import { ConnInfo, State } from "../type_defs/backend_defs";
 
 export class VideoStore {
   state: State | null = null;
   ws: WebSocket | null = null;
+  connInfo: ConnInfo | null = null;
 
   error: string | null = null;
   start = 60;
+
   constructor() {
     makeAutoObservable(this);
   }
